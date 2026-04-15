@@ -1,0 +1,130 @@
+---
+import '../styles/global.css';
+import { SITE } from '../data/site';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+}
+
+const {
+  title = SITE.title,
+  description = SITE.description,
+  path = Astro.url.pathname,
+} = Astro.props;
+
+const fullTitle = title === SITE.title ? title : `${title} — ${SITE.name}`;
+const canonical = new URL(path, SITE.url).toString();
+const ogImage = new URL('/img/og-card.png', SITE.url).toString();
+
+const nav = [
+  { href: '/',           label: 'Home' },
+  { href: '/themes/',    label: 'Themes' },
+  { href: '/scripting/', label: 'Scripting' },
+  { href: '/docs/',      label: 'Docs' },
+];
+
+function isCurrent(href: string) {
+  if (href === '/') return path === '/';
+  return path.startsWith(href);
+}
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0b0d0e" />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <link rel="icon" type="image/png" href="/img/favicon.png" />
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+
+    <!-- Open Graph / social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container site-header-inner">
+        <a href="/" class="brand">
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span>5250ng</span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          {nav.slice(1).map(item => (
+            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          ))}
+          <a class="nav-cta" href={SITE.github} rel="noopener">GitHub →</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="brand" style="margin-bottom: 0.6rem;">
+              <span class="brand-dot" aria-hidden="true"></span>
+              <span>5250ng</span>
+            </div>
+            <p class="small muted mt-0">
+              A modern TN5250 terminal emulator for IBM i and AS/400.
+              Open source under GPL v3.
+            </p>
+          </div>
+          <div>
+            <h4>Project</h4>
+            <ul>
+              <li><a href={SITE.github}>GitHub</a></li>
+              <li><a href={`${SITE.github}/releases`}>Releases</a></li>
+              <li><a href={`${SITE.github}/issues`}>Issue tracker</a></li>
+              <li><a href={`${SITE.github}/blob/main/LICENSE`}>License (GPLv3)</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Docs</h4>
+            <ul>
+              <li><a href="/scripting/">5250Script</a></li>
+              <li><a href="/themes/">Themes</a></li>
+              <li><a href="/docs/">All docs</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Specs</h4>
+            <ul>
+              <li><a href="https://datatracker.ietf.org/doc/html/rfc1205" rel="noopener">RFC 1205 (TN5250)</a></li>
+              <li><a href="https://modelcontextprotocol.io/" rel="noopener">Model Context Protocol</a></li>
+              <li><a href="https://www.qt.io/" rel="noopener">Qt 6</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© {new Date().getFullYear()} 5250ng contributors.</span>
+          <span>Built with Astro. Hosted on GitHub Pages.</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

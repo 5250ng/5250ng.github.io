@@ -1,0 +1,88 @@
+---
+import Base from '../../layouts/Base.astro';
+import FeatureCard from '../../components/FeatureCard.astro';
+import { SITE } from '../../data/site';
+---
+
+<Base
+  title="Documentation"
+  description="Documentation for 5250ng — scripting, themes, MCP integration, and command-line usage."
+>
+  <section class="section">
+    <div class="container">
+      <div class="section-eyebrow">Documentation</div>
+      <h1>Docs index</h1>
+      <p class="section-lead">
+        Reference material for operators, automation engineers, and agent developers.
+        For the canonical source, see the
+        <a href={`${SITE.github}/tree/main/docs`} rel="noopener">
+          <code>docs/</code> tree on GitHub</a>.
+      </p>
+
+      <div class="feature-grid">
+        <FeatureCard title="5250Script" href="/scripting/">
+          Full reference for the scripting language — commands, control flow,
+          functions, error handlers, and variable interpolation.
+        </FeatureCard>
+        <FeatureCard title="Themes" href="/themes/">
+          The 13 built-in themes and the JSON shape for authoring your own.
+        </FeatureCard>
+        <FeatureCard title="README" href={SITE.github}>
+          Installation instructions for Linux, macOS, and Windows, plus the
+          complete command-line flag reference.
+        </FeatureCard>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-eyebrow">Command line</div>
+      <h2>Starting 5250ng from the terminal</h2>
+<pre><code>{`5250ng [options]
+
+  -H, --host <hostname>          Host to connect to (auto-connects at startup)
+  -p, --port <port>              Port number (default: 23)
+      --tls                      Use TLS/SSL encryption
+  -s, --load-session-from-name   Load a saved session by name
+  -f, --load-session-from-file   Load a session from a JSON file
+      --enable-mcp-server        Enable the MCP server on startup
+      --mcp-server-port <port>   MCP server port (default: 9250)
+  -d, --debug                    Enable debug output
+  -h, --help                     Show help
+  -v, --version                  Show version`}</code></pre>
+
+      <h3 class="mt-2">Examples</h3>
+<pre><code>{`# Auto-connect on startup
+5250ng --host as400.example.com
+
+# TLS on the standard port
+5250ng --host as400.example.com --port 992 --tls
+
+# Load a saved session profile
+5250ng --load-session-from-name "Production AS400"
+
+# Start with the MCP server enabled
+5250ng --enable-mcp-server --mcp-server-port 9250`}</code></pre>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-eyebrow">MCP integration</div>
+      <h2>Using the Model Context Protocol server</h2>
+      <p class="muted">
+        When launched with <code>--enable-mcp-server</code>, 5250ng exposes a
+        JSON-RPC&nbsp;2.0 server over HTTP on the configured port (default
+        <code>9250</code>). Any MCP-capable client — Claude Desktop, IDE agents,
+        custom tooling — can connect and invoke the session, screen, action, and
+        filesystem tools documented on the <a href="/#mcp">home page</a>.
+      </p>
+      <p class="muted">
+        Each MCP session is isolated by session ID, and a per-session busy guard
+        prevents race conditions during script execution. File-system tools gate
+        writes behind explicit user approval in the UI.
+      </p>
+    </div>
+  </section>
+</Base>

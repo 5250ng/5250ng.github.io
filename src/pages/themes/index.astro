@@ -1,0 +1,74 @@
+---
+import Base from '../../layouts/Base.astro';
+import ThemeSwatch from '../../components/ThemeSwatch.astro';
+import { themes } from '../../data/themes';
+import { SITE } from '../../data/site';
+---
+
+<Base
+  title="Themes"
+  description="The 13 built-in terminal themes shipped with 5250ng, plus how to author your own."
+>
+  <section class="section">
+    <div class="container">
+      <div class="section-eyebrow">Themes</div>
+      <h1>13 built-in terminal themes.</h1>
+      <p class="section-lead">
+        Every 5250ng theme is a plain JSON file. You can copy any of these
+        themes into your user themes directory and adjust fonts, palette,
+        cursor, CRT effects, and background image.
+      </p>
+
+      <div class="theme-gallery">
+        {themes.map(t => <ThemeSwatch theme={t} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="split">
+        <div>
+          <div class="section-eyebrow">Customization</div>
+          <h2>What each theme controls</h2>
+          <ul>
+            <li>Font family, size, and smoothing</li>
+            <li>Full 16-color palette, or a monochrome override</li>
+            <li>Per-protocol-color mapping (Green / Blue / Red / Cyan / Pink / Yellow / White)</li>
+            <li>Cursor color, shape (Block / Underline / Bar), and blink rate</li>
+            <li>Column separator style</li>
+            <li>Footer status bar colors per segment</li>
+            <li>CRT effects: scanline intensity, phosphor bloom, glow radius, curvature</li>
+            <li>Global brightness and saturation</li>
+            <li>Background image with Stretch / Tile / Center / Fit layout and opacity</li>
+          </ul>
+        </div>
+        <div>
+          <div class="section-eyebrow">JSON shape</div>
+          <h2 class="visually-hidden">Example theme JSON</h2>
+<pre><code>{`{
+  "id": "amber_phosphor",
+  "displayName": "Amber Phosphor",
+  "background": { "mode": "color", "color": "#1a0800" },
+  "font": { "family": "IBM Plex Mono", "size": 14 },
+  "monochrome": { "enabled": true, "color": "#ffb000" },
+  "cursor":  { "shape": "underline", "blinkMs": 530 },
+  "crtEffect": {
+    "enabled": true,
+    "scanlineIntensity": 0.2,
+    "phosphorBloom": 0.45,
+    "glowRadius": 0.15,
+    "curvature": 0.08
+  }
+}`}</code></pre>
+          <p class="small muted">
+            See the source tree at
+            <a href={`${SITE.github}/tree/main/src/ui/themes/data/terminal`} rel="noopener">
+              <code>src/ui/themes/data/terminal/</code></a>
+            for every built-in theme's complete JSON.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

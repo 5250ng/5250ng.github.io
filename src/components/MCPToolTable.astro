@@ -1,0 +1,42 @@
+---
+import { MCP_CATEGORIES } from '../data/mcp-tools';
+---
+<div class="mcp-tables">
+  {MCP_CATEGORIES.map(cat => (
+    <section class="mcp-table">
+      <h3>{cat.name}</h3>
+      <table>
+        <thead>
+          <tr><th style="width: 36%">Tool</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          {cat.tools.map(t => (
+            <tr>
+              <td><code>{t.name}</code></td>
+              <td class="muted">{t.blurb}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  ))}
+</div>
+
+<style>
+  .mcp-tables {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem 2.5rem;
+  }
+  @media (max-width: 820px) {
+    .mcp-tables { grid-template-columns: 1fr; }
+  }
+  .mcp-table h3 {
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.8rem;
+  }
+  .mcp-table table { font-size: 0.88rem; }
+</style>

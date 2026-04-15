@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="404 — Not found" description="Page not found.">
+  <section class="section">
+    <div class="container center">
+      <div class="section-eyebrow">Error 404</div>
+      <h1>Screen not found.</h1>
+      <p class="section-lead" style="margin-inline:auto">
+        The page you're looking for doesn't exist, or it's moved. Try the home
+        page, or press <kbd>F3</kbd>… metaphorically.
+      </p>
+      <div class="btn-row" style="justify-content:center">
+        <a class="btn btn-primary" href="/">← Home</a>
+        <a class="btn" href="/docs/">Documentation</a>
+      </div>
+
+<pre style="max-width:520px;margin:2rem auto 0;text-align:left"><code>{`                  *** 404 ***
+  Resource not found on this system.
+  Press F3 to return to the main menu.`}</code></pre>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,275 @@
+---
+import Base from '../layouts/Base.astro';
+import FeatureCard from '../components/FeatureCard.astro';
+import ThemeSwatch from '../components/ThemeSwatch.astro';
+import MCPToolTable from '../components/MCPToolTable.astro';
+import InstallBlock from '../components/InstallBlock.astro';
+import { themes } from '../data/themes';
+import { CODEPAGES } from '../data/codepages';
+import { MCP_TOOL_COUNT } from '../data/mcp-tools';
+import { SITE } from '../data/site';
+
+// First six themes for the homepage teaser. Full gallery on /themes.
+const themesTeaser = themes.slice(0, 6);
+
+const sampleScript = `# Login to AS/400 and capture the main menu title
+EXPECT TEXT "Sign On" AT 1 23
+MOVE CURSOR AT INPUTFIELD 1
+TYPE "$SESSION_USERNAME"
+MOVE CURSOR AT INPUTFIELD 2
+TYPE "$SESSION_PASSWORD"
+PRESS ENTER
+
+EXPECT TEXT "MAIN MENU"
+EXTRACT ROW 1 INTO $HEADER
+LOG "Connected: $HEADER"`;
+---
+
+<Base>
+  <!-- ─────────────── Hero ─────────────── -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="hero-kicker">
+          <span class="brand-dot" style="width:6px;height:6px"></span>
+          Open source · GPL v3
+        </span>
+        <h1>A modern TN5250 terminal emulator for IBM&nbsp;i and AS/400.</h1>
+        <p class="hero-lead">
+          Full RFC&nbsp;1205 protocol, 13 EBCDIC code pages, a dedicated scripting
+          language, and an embedded Model Context Protocol server — built with
+          Qt&nbsp;6 and C++17, native on Linux, macOS, and Windows.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href={SITE.releasesLatest} rel="noopener">
+            Download latest release →
+          </a>
+          <a class="btn" href={SITE.github} rel="noopener">Source on GitHub</a>
+        </div>
+        <p class="small muted" style="margin-top:1.2rem">
+          Binaries for Linux, macOS, and Windows are attached to each GitHub release.
+          Or build from source — see <a href="#install">install</a>.
+        </p>
+      </div>
+
+      <div class="hero-screenshot">
+        <img
+          src="/img/hero-login.png"
+          alt="5250ng displaying an IBM i sign-on screen"
+          width="960"
+          height="600"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────── At a glance ─────────────── -->
+  <section class="section" id="overview">
+    <div class="container">
+      <div class="section-eyebrow">At a glance</div>
+      <h2>Three things that make 5250ng different.</h2>
+      <p class="section-lead">
+        Most TN5250 emulators solve the protocol. 5250ng also solves what comes next:
+        automation that outlives keystroke recordings, and access for the AI agents that
+        are starting to replace screen-scraping pipelines.
+      </p>
+
+      <div class="feature-grid">
+        <FeatureCard title="Protocol-complete" href="#core">
+          Full TN5250 per RFC&nbsp;1205, 24×80 and 27×132 screen modes, TLS/SSL,
+          and 13 EBCDIC code pages for global operations.
+        </FeatureCard>
+        <FeatureCard title="Scriptable" href="/scripting/">
+          A purpose-built DSL with variables, control flow, functions, error
+          handlers, and <code>EXPECT</code>/<code>EXTRACT</code> — not a macro recorder.
+        </FeatureCard>
+        <FeatureCard title="Agent-ready" href="#mcp">
+          An embedded Model Context Protocol server exposes {MCP_TOOL_COUNT} tools
+          over JSON-RPC&nbsp;2.0. Any MCP-capable client can drive a session.
+        </FeatureCard>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────── Core emulation ─────────────── -->
+  <section class="section" id="core">
+    <div class="container">
+      <div class="split">
+        <div>
+          <div class="section-eyebrow">Terminal emulation</div>
+          <h2>Full TN5250, the way IBM specifies it.</h2>
+          <p class="muted">
+            Connect to any AS/400 or IBM i system with the complete 5250 command
+            and display-order set, Telnet option negotiation, and TLS/SSL on the
+            standard port 992 or any configured port.
+          </p>
+          <ul>
+            <li>RFC 1205 with Telnet option negotiation</li>
+            <li>24×80 (standard) and 27×132 (extended) screen modes</li>
+            <li>Keyboard state machine per IBM SA21-9247-6</li>
+            <li><kbd>PF1</kbd>–<kbd>PF24</kbd>, Field Exit, Erase EOF, SysReq, Attn</li>
+            <li>Field attributes: protected, MDT, highlight, blink, reverse, underline</li>
+            <li>Multi-tab sessions with JSON profiles, auto-connect, and per-session settings</li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="section-eyebrow">Code pages</div>
+          <h2 class="visually-hidden">Supported EBCDIC code pages</h2>
+          <table>
+            <thead>
+              <tr><th>Code page</th><th>Region</th></tr>
+            </thead>
+            <tbody>
+              {CODEPAGES.map(cp => (
+                <tr>
+                  <td><code>{cp.id}</code></td>
+                  <td class="muted">{cp.region}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────── Scripting ─────────────── -->
+  <section class="section" id="scripting">
+    <div class="container">
+      <div class="split">
+        <div>
+          <div class="section-eyebrow">5250Script</div>
+          <h2>A small DSL for screen automation.</h2>
+          <p class="muted">
+            5250Script is a line-based scripting language inspired by Unix
+            <code>expect</code>. It treats screens, fields, and the keyboard state
+            as first-class objects, with its own lexer, parser, and AST executor.
+          </p>
+          <ul>
+            <li><code>TYPE</code>, <code>PRESS</code>, <code>MOVE CURSOR</code>, <code>EXPECT</code>, <code>EXTRACT</code></li>
+            <li><code>IF</code>/<code>WHILE</code>/<code>REPEAT</code>, <code>LABEL</code>/<code>GOTO</code></li>
+            <li><code>DEF</code>/<code>CALL</code>/<code>RETURN</code> with parameters</li>
+            <li><code>ON TIMEOUT GOTO</code>, <code>ON ERROR GOTO</code>, <code>ABORT</code></li>
+            <li>Variable interpolation and session-scoped variables</li>
+            <li>Interactive <code>INPUT</code> prompts mid-script</li>
+          </ul>
+          <div class="btn-row">
+            <a class="btn" href="/scripting/">Full reference →</a>
+            <a class="btn" href={`${SITE.github}/blob/main/docs/5250script.md`} rel="noopener">docs on GitHub</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="codeblock">
+            <div class="codeblock-label">// login.5250script</div>
+            <pre><code>{sampleScript}</code></pre>
+          </div>
+          <p class="small muted">
+            Macro recordings can be converted to editable 5250Script with one
+            click — the bridge from "I did it once" to "it's in git."
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────── AI &amp; MCP ─────────────── -->
+  <section class="section" id="mcp">
+    <div class="container">
+      <div class="section-eyebrow">AI &amp; MCP integration</div>
+      <h2>Expose a session to any MCP-capable agent.</h2>
+      <p class="section-lead">
+        5250ng embeds a <a href="https://modelcontextprotocol.io/" rel="noopener">Model Context Protocol</a>
+        server over HTTP + JSON-RPC&nbsp;2.0. An MCP client can create sessions, read screens,
+        send keys, execute scripts, and capture screenshots — all as first-class tools with
+        validated schemas. A side-panel AI assistant (Anthropic or OpenAI, API key or OAuth)
+        uses the same surface to drive sessions from natural language.
+      </p>
+
+      <MCPToolTable />
+
+      <div class="feature-grid mt-2">
+        <FeatureCard title="Two providers">
+          Anthropic (Claude) and OpenAI. Choose model and system prompt per provider.
+        </FeatureCard>
+        <FeatureCard title="Two auth modes">
+          API key or OAuth&nbsp;2.0 (browser-based). Tokens stored locally.
+        </FeatureCard>
+        <FeatureCard title="User-approval gate">
+          Agent-initiated file writes surface as pending, user-approvable operations.
+        </FeatureCard>
+      </div>
+
+      <p class="small muted mt-2">
+        The MCP server listens on TCP port <code>9250</code> by default and can be
+        enabled with the <code>--enable-mcp-server</code> flag. Each MCP session is
+        isolated by session ID with a per-session busy guard.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────── Themes ─────────────── -->
+  <section class="section" id="themes">
+    <div class="container">
+      <div class="section-eyebrow">Appearance</div>
+      <h2>13 built-in themes, fully customizable.</h2>
+      <p class="section-lead">
+        From authentic amber phosphor to modern Nord and Dracula. Every theme
+        exposes font, 16-color palette, cursor, CRT scanline intensity, phosphor
+        bloom, and background image layout. Themes are plain JSON — share them,
+        fork them, commit them.
+      </p>
+
+      <div class="theme-gallery">
+        {themesTeaser.map(t => <ThemeSwatch theme={t} />)}
+      </div>
+
+      <div class="btn-row">
+        <a class="btn" href="/themes/">See all 13 themes →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────── Install ─────────────── -->
+  <section class="section" id="install">
+    <div class="container">
+      <div class="section-eyebrow">Install</div>
+      <h2>Build from source, or download a release.</h2>
+      <p class="section-lead">
+        Requires CMake 3.16+, a C++17 compiler, and Qt&nbsp;6.5+. OpenSSL is
+        optional and only required for TLS. GitHub Actions CI builds binaries
+        for all three platforms on every release.
+      </p>
+
+      <InstallBlock />
+
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.releasesLatest} rel="noopener">
+          Download latest release →
+        </a>
+        <a class="btn" href={`${SITE.github}#installation`} rel="noopener">Full install guide</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────── Credits ─────────────── -->
+  <section class="section">
+    <div class="container">
+      <div class="section-eyebrow">Project</div>
+      <h2>Open source, GPL v3, community contributions welcome.</h2>
+      <p class="section-lead">
+        5250ng is developed by
+        <a href={SITE.authorUrl} rel="noopener">@p0dalirius</a>
+        and contributors. Pull requests and issue reports are welcome.
+      </p>
+      <div class="btn-row">
+        <a class="btn" href={SITE.github} rel="noopener">Source on GitHub</a>
+        <a class="btn" href={`${SITE.github}/issues`} rel="noopener">Open an issue</a>
+        <a class="btn" href={`${SITE.github}/blob/main/LICENSE`} rel="noopener">License (GPL v3)</a>
+      </div>
+    </div>
+  </section>
+</Base>

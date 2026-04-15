@@ -1,0 +1,30 @@
+---
+// Shows install snippets for all three platforms. Sourced from README.md.
+---
+<div class="install-tabs">
+  <div class="install-card">
+    <h3>Linux (Ubuntu / Debian)</h3>
+<pre><code>sudo apt install qt6-base-dev cmake g++ \
+  libxkbcommon-dev libssl-dev
+cmake -S . -B build
+cmake --build build
+./build/bin/5250ng</code></pre>
+  </div>
+
+  <div class="install-card">
+    <h3>macOS</h3>
+<pre><code>brew install qt cmake openssl
+cmake -S . -B build
+cmake --build build
+./build/bin/5250ng.app/Contents/MacOS/5250ng</code></pre>
+  </div>
+
+  <div class="install-card">
+    <h3>Windows</h3>
+<pre><code>git clone --recursive \
+  https://github.com/5250ng/5250ng.git
+cd 5250ng
+build.bat release</code></pre>
+    <p class="small muted mt-0">Requires Qt6 (MinGW or MSVC 2022 kit) and OpenSSL for TLS.</p>
+  </div>
+</div>

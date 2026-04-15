@@ -1,0 +1,31 @@
+---
+import type { Theme } from '../data/themes';
+
+export interface Props {
+  theme: Theme;
+}
+
+const { theme } = Astro.props;
+---
+<article class="theme-card" aria-label={`${theme.displayName} theme preview`}>
+  <div
+    class="theme-preview"
+    style={`background: ${theme.background}; color: ${theme.foreground};`}
+  >
+    <div class="theme-preview-text">{`> SIGN ON
+USER: QSECOFR
+PASSWORD: ********
+SYSTEM: IBMI01`}</div>
+  </div>
+  <div class="theme-meta">
+    <div class="theme-meta-name">{theme.displayName}</div>
+    <p class="theme-meta-desc">
+      {theme.description || (theme.monochrome ? 'Monochrome palette.' : 'Full 16-color palette.')}
+    </p>
+  </div>
+  <div class="theme-swatch-row" aria-hidden="true">
+    {theme.palette.map(c => (
+      <span class="theme-swatch" style={`background: ${c}`}></span>
+    ))}
+  </div>
+</article>
