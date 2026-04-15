@@ -3,7 +3,10 @@ import Base from '../layouts/Base.astro';
 import FeatureCard from '../components/FeatureCard.astro';
 import ThemeSwatch from '../components/ThemeSwatch.astro';
 import MCPToolTable from '../components/MCPToolTable.astro';
+import MCPDiagram from '../components/MCPDiagram.astro';
 import InstallBlock from '../components/InstallBlock.astro';
+import CopyButton from '../components/CopyButton.astro';
+import Script5250 from '../components/Script5250.astro';
 import { themes } from '../data/themes';
 import { CODEPAGES } from '../data/codepages';
 import { MCP_TOOL_COUNT } from '../data/mcp-tools';
@@ -46,6 +49,16 @@ LOG "Connected: $HEADER"`;
           </a>
           <a class="btn" href={SITE.github} rel="noopener">Source on GitHub</a>
         </div>
+
+        <ul class="badges" aria-label="Specifications">
+          <li class="badge">TN5250 / RFC 1205</li>
+          <li class="badge">IBM i · AS/400</li>
+          <li class="badge badge-green">MCP server</li>
+          <li class="badge">Qt 6 · C++17</li>
+          <li class="badge">Linux · macOS · Windows</li>
+          <li class="badge">GPL v3</li>
+        </ul>
+
         <p class="small muted" style="margin-top:1.2rem">
           Binaries for Linux, macOS, and Windows are attached to each GitHub release.
           Or build from source — see <a href="#install">install</a>.
@@ -163,10 +176,7 @@ LOG "Connected: $HEADER"`;
         </div>
 
         <div>
-          <div class="codeblock">
-            <div class="codeblock-label">// login.5250script</div>
-            <pre><code>{sampleScript}</code></pre>
-          </div>
+          <Script5250 code={sampleScript} label="// login.5250script" />
           <p class="small muted">
             Macro recordings can be converted to editable 5250Script with one
             click — the bridge from "I did it once" to "it's in git."
@@ -188,6 +198,8 @@ LOG "Connected: $HEADER"`;
         validated schemas. A side-panel AI assistant (Anthropic or OpenAI, API key or OAuth)
         uses the same surface to drive sessions from natural language.
       </p>
+
+      <MCPDiagram />
 
       <MCPToolTable />
 
@@ -272,4 +284,6 @@ LOG "Connected: $HEADER"`;
       </div>
     </div>
   </section>
+
+  <CopyButton />
 </Base>

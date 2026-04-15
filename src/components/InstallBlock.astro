@@ -1,9 +1,11 @@
 ---
 // Shows install snippets for all three platforms. Sourced from README.md.
+// Hover a card to reveal a copy-to-clipboard button.
 ---
 <div class="install-tabs">
   <div class="install-card">
     <h3>Linux (Ubuntu / Debian)</h3>
+    <button class="copy-btn" data-copy type="button" aria-label="Copy Linux install commands">Copy</button>
 <pre><code>sudo apt install qt6-base-dev cmake g++ \
   libxkbcommon-dev libssl-dev
 cmake -S . -B build
@@ -13,6 +15,7 @@ cmake --build build
 
   <div class="install-card">
     <h3>macOS</h3>
+    <button class="copy-btn" data-copy type="button" aria-label="Copy macOS install commands">Copy</button>
 <pre><code>brew install qt cmake openssl
 cmake -S . -B build
 cmake --build build
@@ -21,6 +24,7 @@ cmake --build build
 
   <div class="install-card">
     <h3>Windows</h3>
+    <button class="copy-btn" data-copy type="button" aria-label="Copy Windows install commands">Copy</button>
 <pre><code>git clone --recursive \
   https://github.com/5250ng/5250ng.git
 cd 5250ng

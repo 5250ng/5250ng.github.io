@@ -1,0 +1,30 @@
+---
+// Small progressive-enhancement copy-to-clipboard script.
+// Renders once per page; it attaches to any [data-copy] button inside an
+// .install-card or .codeblock. Falls back cleanly if the Clipboard API is
+// unavailable (the button is decorative for no-JS users; content is visible).
+---
+<script is:inline>
+  (function () {
+    if (!navigator?.clipboard) return;
+    document.addEventListener('click', function (e) {
+      const btn = e.target.closest('[data-copy]');
+      if (!btn) return;
+      const selector = btn.getAttribute('data-copy');
+      const target = selector
+        ? document.querySelector(selector)
+        : btn.parentElement?.querySelector('pre code');
+      if (!target) return;
+      const text = target.innerText;
+      navigator.clipboard.writeText(text).then(function () {
+        const prev = btn.textContent;
+        btn.textContent = 'Copied';
+        btn.setAttribute('data-copied', 'true');
+        setTimeout(function () {
+          btn.textContent = prev;
+          btn.removeAttribute('data-copied');
+        }, 1600);
+      });
+    });
+  }());
+</script>

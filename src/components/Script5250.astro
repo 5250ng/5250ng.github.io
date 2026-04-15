@@ -1,0 +1,75 @@
+---
+// Lightweight syntax highlighter for inline 5250Script samples.
+// Tokenizes keywords, strings, $variables, numbers, and # comments —
+// enough for the home-page sample. Not a full lexer.
+
+export interface Props {
+  code: string;
+  label?: string;
+}
+
+const { code, label } = Astro.props;
+
+const KEYWORDS = [
+  'TYPE', 'PRESS', 'MOVE', 'CURSOR', 'EXPECT', 'EXTRACT', 'LOG', 'PAUSE',
+  'WAIT', 'SET', 'INC', 'DEC', 'ADD', 'IF', 'ELSE', 'ENDIF', 'WHILE',
+  'ENDWHILE', 'REPEAT', 'ENDREPEAT', 'LABEL', 'GOTO', 'DEF', 'ENDDEF',
+  'CALL', 'RETURN', 'ON', 'TIMEOUT', 'ERROR', 'ABORT', 'INPUT', 'GLOBAL',
+  'ENTER', 'TAB', 'ESC', 'CLEAR', 'RESET', 'HELP', 'SYSREQ', 'ATTN',
+  'PRINT', 'DUP', 'PAGEUP', 'PAGEDOWN',
+];
+const INFIX = ['AT', 'INTO', 'TEXT', 'ROW', 'INPUTFIELD', 'CURSOR_ROW', 'CURSOR_COL'];
+
+// Escape HTML entities
+function esc(s: string): string {
+  return s.replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!
+  ));
+}
+
+function highlightLine(line: string): string {
+  // Split off a trailing comment first, so we don't tokenize inside it.
+  const hashIdx = (() => {
+    let inStr = false;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '"') inStr = !inStr;
+      else if (line[i] === '#' && !inStr) return i;
+    }
+    return -1;
+  })();
+
+  let body = hashIdx >= 0 ? line.slice(0, hashIdx) : line;
+  let tail = hashIdx >= 0 ? line.slice(hashIdx) : '';
+
+  // Tokenize body: strings, variables, numbers, identifiers, whitespace
+  const tokens: string[] = [];
+  const re = /"[^"]*"|\$[A-Za-z_][A-Za-z0-9_]*|\b\d+\b|[A-Za-z_][A-Za-z0-9_]*|[^A-Za-z0-9_$"\s]+|\s+/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(body)) !== null) {
+    const t = m[0];
+    if (t[0] === '"') {
+      tokens.push(`<span class="str">${esc(t)}</span>`);
+    } else if (t[0] === '$') {
+      tokens.push(`<span class="var">${esc(t)}</span>`);
+    } else if (/^\d+$/.test(t)) {
+      tokens.push(`<span class="num">${t}</span>`);
+    } else if (/^[A-Za-z_]/.test(t)) {
+      if (KEYWORDS.includes(t)) tokens.push(`<span class="kw">${t}</span>`);
+      else if (INFIX.includes(t)) tokens.push(`<span class="fn">${t}</span>`);
+      else tokens.push(esc(t));
+    } else {
+      tokens.push(esc(t));
+    }
+  }
+
+  let out = tokens.join('');
+  if (tail) out += `<span class="cmt">${esc(tail)}</span>`;
+  return out;
+}
+
+const highlighted = code.split('\n').map(highlightLine).join('\n');
+---
+<div class="codeblock">
+  {label && <div class="codeblock-label">{label}</div>}
+  <pre class="hl"><code set:html={highlighted}></code></pre>
+</div>

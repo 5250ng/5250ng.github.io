@@ -1,0 +1,22 @@
+---
+// Linear architecture diagram for the MCP section.
+// Plain CSS grid — no SVG, no runtime JS. Collapses to a stack on mobile.
+---
+<div class="mcp-diagram" role="img" aria-label="MCP data flow: AI client to 5250ng to IBM i">
+  <div class="mcp-node">
+    <div class="mcp-node-title">AI client</div>
+    <div class="mcp-node-sub">Claude Desktop · IDE agents · custom</div>
+  </div>
+  <div class="mcp-node mcp-node-accent">
+    <div class="mcp-node-title">MCP server</div>
+    <div class="mcp-node-sub">JSON-RPC 2.0 over HTTP · port 9250</div>
+  </div>
+  <div class="mcp-node mcp-node-accent">
+    <div class="mcp-node-title">5250ng</div>
+    <div class="mcp-node-sub">Session manager · screen buffer</div>
+  </div>
+  <div class="mcp-node">
+    <div class="mcp-node-title">IBM i / AS/400</div>
+    <div class="mcp-node-sub">TN5250 · RFC 1205 · TLS</div>
+  </div>
+</div>

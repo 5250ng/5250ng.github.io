@@ -44,8 +44,12 @@ function isCurrent(href: string) {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
 
-    <link rel="icon" type="image/png" href="/img/favicon.png" />
     <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16"  href="/img/favicon-16.png" />
+    <link rel="icon" type="image/png" sizes="32x32"  href="/img/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/img/favicon-512.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon-180.png" />
 
     <!-- Open Graph / social -->
     <meta property="og:type" content="website" />
@@ -63,7 +67,7 @@ function isCurrent(href: string) {
     <header class="site-header">
       <div class="container site-header-inner">
         <a href="/" class="brand">
-          <span class="brand-dot" aria-hidden="true"></span>
+          <img src="/img/logo.png" alt="" class="brand-logo" width="32" height="32" />
           <span>5250ng</span>
         </a>
         <nav class="nav" aria-label="Primary">
@@ -86,7 +90,7 @@ function isCurrent(href: string) {
         <div class="footer-grid">
           <div>
             <div class="brand" style="margin-bottom: 0.6rem;">
-              <span class="brand-dot" aria-hidden="true"></span>
+              <img src="/img/logo.png" alt="" class="brand-logo" width="28" height="28" />
               <span>5250ng</span>
             </div>
             <p class="small muted mt-0">
